@@ -1,13 +1,14 @@
 import { BusinessRule } from './business-rule.interface';
-import { EntityId } from './entity-id';
+import { EntityId, IdType } from './entity-id';
 import { BusinessRuleError } from './errors/business-rule.error';
 import { DomainError } from './errors/domain.error';
 
-export abstract class Entity<T> {
-  private readonly _id: EntityId;
-  private readonly _props: T;
+export abstract class Entity<IdT extends IdType> {
+  readonly id: EntityId<IdT>;
 
-  constructor(id: EntityId, props: T) {
+  readonly props: IdT;
+
+  protected constructor(id: EntityId<IdT>, props: IdT) {
     if (id == null) {
       throw new DomainError('Entity ID must be provided');
     }
@@ -16,16 +17,8 @@ export abstract class Entity<T> {
       throw new DomainError('Entity properties must be provided');
     }
 
-    this._id = id;
-    this._props = props;
-  }
-
-  get id(): EntityId {
-    return this._id;
-  }
-
-  get props(): T {
-    return this._props;
+    this.id = id;
+    this.props = props;
   }
 
   checkRule(rule: BusinessRule): void {
@@ -34,23 +27,15 @@ export abstract class Entity<T> {
     }
   }
 
-  equals(other: Entity<T>): boolean {
-    if (other == null) {
+  equals(another: Entity<IdT>): boolean {
+    if (!another) {
       return false;
     }
 
-    if (this === other) {
+    if (this === another) {
       return true;
     }
 
-    if (!isEntity(other)) {
-      return false;
-    }
-
-    return this._id.equals(other._id);
+    return this.id.equals(another.id);
   }
 }
-
-const isEntity = (obj: any): obj is Entity<any> => {
-  return obj instanceof Entity;
-};

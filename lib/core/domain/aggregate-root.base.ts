@@ -1,7 +1,8 @@
 import { DomainEvent } from './domain-event.base';
+import { IdType } from './entity-id';
 import { Entity } from './entity.base';
 
-export abstract class AggregateRoot<T> extends Entity<T> {
+export abstract class AggregateRoot<IdT extends IdType> extends Entity<IdT> {
   private _domainEvents: DomainEvent[] = [];
 
   get domainEvents(): DomainEvent[] {

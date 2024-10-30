@@ -4,18 +4,14 @@ import { BusinessRuleError } from './errors/business-rule.error';
 import { DomainError } from './errors/domain.error';
 
 export abstract class ValueObject<T> {
-  private readonly _props: T;
+  readonly props: T;
 
   constructor(props: T) {
     if (props == null) {
       throw new DomainError('Value properties must be provided');
     }
 
-    this._props = Object.freeze({ ...props });
-  }
-
-  get props(): T {
-    return this._props;
+    this.props = Object.freeze({ ...props });
   }
 
   protected static checkRule(rule: BusinessRule): void {
@@ -24,21 +20,17 @@ export abstract class ValueObject<T> {
     }
   }
 
-  equals(other: ValueObject<T>): boolean {
-    if (other == null) {
+  equals(another: ValueObject<T>): boolean {
+    if (!another) {
       return false;
     }
 
-    if (this === other) {
+    if (this === another) {
       return true;
     }
 
-    if (!isValueObject(other)) {
-      return false;
-    }
-
     try {
-      deepStrictEqual(other.props, this.props);
+      deepStrictEqual(another.props, this.props);
     } catch (error) {
       return false;
     }
@@ -46,7 +38,3 @@ export abstract class ValueObject<T> {
     return true;
   }
 }
-
-const isValueObject = (obj: any): obj is ValueObject<any> => {
-  return obj instanceof ValueObject;
-};

@@ -1,5 +1,5 @@
-export interface EntityMapper<T> {
-  toDomain(dbModel: any): T;
+export interface EntityMapper<EntityType> {
+  toDomain(dbModel: any): EntityType;
 
-  toPersistence(entity: T): { [key in keyof T]: any };
+  toPersistence(entity: EntityType): { [key in keyof EntityType]: any };
 }

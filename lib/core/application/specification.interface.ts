@@ -1,5 +1,5 @@
 import { Entity } from '../domain/entity.base';
 
-export interface Specification<T extends Entity<any>> {
-  isSatisfiedBy(entity: T): Promise<boolean> | boolean;
+export interface Specification<EntityType extends Entity<any>> {
+  isSatisfiedBy(entity: EntityType): Promise<boolean>;
 }

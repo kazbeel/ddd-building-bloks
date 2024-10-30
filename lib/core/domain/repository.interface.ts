@@ -1,7 +1,7 @@
 import { EntityId } from './entity-id';
 
-export interface Repository<T> {
+export interface Repository<Entity> {
   generateId(): Promise<EntityId>;
 
-  save(entity: T): Promise<T>;
+  save(entity: Entity): Promise<Entity>;
 }
